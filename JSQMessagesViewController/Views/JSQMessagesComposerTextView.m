@@ -1,6 +1,6 @@
 //
 //  Created by Jesse Squires
-//  http://www.jessesquires.com
+//  http://www.hexedbits.com
 //
 //
 //  Documentation
@@ -23,6 +23,20 @@
 #import "NSString+JSQMessages.h"
 
 
+@interface JSQMessagesComposerTextView ()
+
+- (void)jsq_configureTextView;
+
+- (void)jsq_addTextViewNotificationObservers;
+- (void)jsq_removeTextViewNotificationObservers;
+- (void)jsq_didReceiveTextViewNotification:(NSNotification *)notification;
+
+- (NSDictionary *)jsq_placeholderTextAttributes;
+
+@end
+
+
+
 @implementation JSQMessagesComposerTextView
 
 #pragma mark - Initialization
@@ -41,7 +55,7 @@
     self.scrollIndicatorInsets = UIEdgeInsetsMake(cornerRadius, 0.0f, cornerRadius, 0.0f);
     
     self.textContainerInset = UIEdgeInsetsMake(4.0f, 2.0f, 4.0f, 2.0f);
-    self.contentInset = UIEdgeInsetsMake(1.0f, 0.0f, 1.0f, 0.0f);
+    self.contentInset = UIEdgeInsetsMake(2.0f, 0.0f, 2.0f, 0.0f);
     
     self.scrollEnabled = YES;
     self.scrollsToTop = NO;
@@ -49,7 +63,7 @@
     
     self.font = [UIFont systemFontOfSize:16.0f];
     self.textColor = [UIColor blackColor];
-    self.textAlignment = NSTextAlignmentNatural;
+    self.textAlignment = NSTextAlignmentLeft;
     
     self.contentMode = UIViewContentModeRedraw;
     self.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -83,6 +97,8 @@
 - (void)dealloc
 {
     [self jsq_removeTextViewNotificationObservers];
+    _placeHolder = nil;
+    _placeHolderTextColor = nil;
 }
 
 #pragma mark - Composer text view
@@ -138,13 +154,6 @@
 {
     [super setTextAlignment:textAlignment];
     [self setNeedsDisplay];
-}
-
-- (void)paste:(id)sender
-{
-    if (!self.pasteDelegate || [self.pasteDelegate composerTextView:self shouldPasteWithSender:sender]) {
-        [super paste:sender];
-    }
 }
 
 #pragma mark - Drawing

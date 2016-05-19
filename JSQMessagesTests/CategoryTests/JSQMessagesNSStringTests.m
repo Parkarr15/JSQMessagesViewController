@@ -1,6 +1,6 @@
 //
 //  Created by Jesse Squires
-//  http://www.jessesquires.com
+//  http://www.hexedbits.com
 //
 //
 //  MIT License
@@ -9,6 +9,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <OCMock/OCMock.h>
 
 #import "NSString+JSQMessages.h"
 
@@ -19,17 +20,24 @@
 
 @implementation JSQMessagesNSStringTests
 
+- (void)setUp
+{
+    [super setUp];
+}
+
+- (void)tearDown
+{
+    [super tearDown];
+}
+
 - (void)testTrimingStringWhitespace
 {
-    // GIVEN: a string of text
     NSString *loremIpsum = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-    // WHEN: the text is wrapped in white space
     NSString *string1 = [NSString stringWithFormat:@"       %@      ", loremIpsum];
     NSString *string2 = [NSString stringWithFormat:@"       %@", loremIpsum];
     NSString *string3 = [NSString stringWithFormat:@"%@      ", loremIpsum];
     
-    // THEN: we can successfully trim extra white space
     XCTAssertEqualObjects(loremIpsum, [string1 jsq_stringByTrimingWhitespace], @"Strings should be equal after trimming whitespace");
     
     XCTAssertEqualObjects(loremIpsum, [string2 jsq_stringByTrimingWhitespace], @"Strings should be equal after trimming whitespace");
